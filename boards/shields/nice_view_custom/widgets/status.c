@@ -39,14 +39,14 @@ struct output_status_state {
     bool active_profile_bonded;
 };
 
-//struct layer_status_state {
-//    uint8_t index;
-//    const char *label;
-//};
-//
-//struct wpm_status_state {
-//    uint8_t wpm;
-//};
+struct layer_status_state {
+    uint8_t index;
+    const char *label;
+};
+
+struct wpm_status_state {
+    uint8_t wpm;
+};
 
 static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
     lv_obj_t *canvas = lv_obj_get_child(widget, 0);
@@ -268,49 +268,49 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_usb_conn_state_changed);
 ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
 #endif
 
-//static void set_layer_status(struct zmk_widget_status *widget, struct layer_status_state state) {
-//    widget->state.layer_index = state.index;
-//    widget->state.layer_label = state.label;
-//
-//    draw_bottom(widget->obj, widget->cbuf3, &widget->state);
-//}
-//
-//static void layer_status_update_cb(struct layer_status_state state) {
-//    struct zmk_widget_status *widget;
-//    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_layer_status(widget, state); }
-//}
-//
-//static struct layer_status_state layer_status_get_state(const zmk_event_t *eh) {
-//    uint8_t index = zmk_keymap_highest_layer_active();
-//    return (struct layer_status_state){.index = index, .label = zmk_keymap_layer_name(index)};
-//}
-//
-//ZMK_DISPLAY_WIDGET_LISTENER(widget_layer_status, struct layer_status_state, layer_status_update_cb,
-//                            layer_status_get_state)
-//
-//ZMK_SUBSCRIPTION(widget_layer_status, zmk_layer_state_changed);
-//
-//static void set_wpm_status(struct zmk_widget_status *widget, struct wpm_status_state state) {
-//    for (int i = 0; i < 9; i++) {
-//        widget->state.wpm[i] = widget->state.wpm[i + 1];
-//    }
-//    widget->state.wpm[9] = state.wpm;
-//
-//    draw_top(widget->obj, widget->cbuf, &widget->state);
-//}
-//
-//static void wpm_status_update_cb(struct wpm_status_state state) {
-//    struct zmk_widget_status *widget;
-//    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_wpm_status(widget, state); }
-//}
-//
-//struct wpm_status_state wpm_status_get_state(const zmk_event_t *eh) {
-//    return (struct wpm_status_state){.wpm = zmk_wpm_get_state()};
-//};
-//
-//ZMK_DISPLAY_WIDGET_LISTENER(widget_wpm_status, struct wpm_status_state, wpm_status_update_cb,
-//                            wpm_status_get_state)
-//ZMK_SUBSCRIPTION(widget_wpm_status, zmk_wpm_state_changed);
+static void set_layer_status(struct zmk_widget_status *widget, struct layer_status_state state) {
+    widget->state.layer_index = state.index;
+    widget->state.layer_label = state.label;
+
+    draw_bottom(widget->obj, widget->cbuf3, &widget->state);
+}
+
+static void layer_status_update_cb(struct layer_status_state state) {
+    struct zmk_widget_status *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_layer_status(widget, state); }
+}
+
+static struct layer_status_state layer_status_get_state(const zmk_event_t *eh) {
+    uint8_t index = zmk_keymap_highest_layer_active();
+    return (struct layer_status_state){.index = index, .label = zmk_keymap_layer_name(index)};
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_layer_status, struct layer_status_state, layer_status_update_cb,
+                            layer_status_get_state)
+
+ZMK_SUBSCRIPTION(widget_layer_status, zmk_layer_state_changed);
+
+static void set_wpm_status(struct zmk_widget_status *widget, struct wpm_status_state state) {
+    for (int i = 0; i < 9; i++) {
+        widget->state.wpm[i] = widget->state.wpm[i + 1];
+    }
+    widget->state.wpm[9] = state.wpm;
+
+    draw_top(widget->obj, widget->cbuf, &widget->state);
+}
+
+static void wpm_status_update_cb(struct wpm_status_state state) {
+    struct zmk_widget_status *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_wpm_status(widget, state); }
+}
+
+struct wpm_status_state wpm_status_get_state(const zmk_event_t *eh) {
+    return (struct wpm_status_state){.wpm = zmk_wpm_get_state()};
+};
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_wpm_status, struct wpm_status_state, wpm_status_update_cb,
+                            wpm_status_get_state)
+ZMK_SUBSCRIPTION(widget_wpm_status, zmk_wpm_state_changed);
 
 int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     widget->obj = lv_obj_create(parent);
