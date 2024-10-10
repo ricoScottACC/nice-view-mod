@@ -139,7 +139,7 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     //lv_img_set_src(art, &moon1);
     lv_obj_t * art = lv_animimg_create(widget->obj);            //<--
     lv_obj_center(art);                                         //<--
-    lv_animimg_set_src(art, (const void **) anim_imgs, 12);     //<--
+    lv_animimg_set_src(art, (const void **) anim_imgs, 8);     //<--
     lv_animimg_set_duration(art, 4000);                         //<--
     lv_animimg_set_repeat_count(art, LV_ANIM_REPEAT_INFINITE);  //<--
     lv_animimg_start(art);                                      //<--
